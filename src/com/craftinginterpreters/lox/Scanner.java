@@ -1,11 +1,10 @@
 package com.craftinginterpreters.lox;
 
+import static com.craftinginterpreters.lox.TokenType.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.craftinginterpreters.lox.TokenType.*;
 
 public class Scanner {
     private final String source;
@@ -153,8 +152,7 @@ public class Scanner {
             }
         }
 
-        String numberString = source.substring(start, current);
-        addToken(NUMBER, Double.parseDouble(numberString));
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private void string() {
