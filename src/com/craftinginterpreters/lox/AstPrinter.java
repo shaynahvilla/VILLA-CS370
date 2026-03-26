@@ -26,13 +26,27 @@ class AstPrinter implements Expr.Visitor<String> {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
 
-    private String parenthesize(String name, Expr... exprs) {
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return parenthesize("=", expr.name.lexeme, expr.value);
+    }
+
+    private String parenthesize(String name, Object... exprs) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("(").append(name);
-        for (Expr expr : exprs) {
+        for (Object expr : exprs) {
             builder.append(" ");
-            builder.append(expr.accept(this));
+            if (expr instanceof Expr) {
+                builder.append(((Expr) expr).accept(this));
+            } else {
+                builder.append(expr.toString());
+            }
         }
         builder.append(")");
 
