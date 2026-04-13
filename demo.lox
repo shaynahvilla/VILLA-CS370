@@ -1,0 +1,37 @@
+// Simple demonstration of if statements in JLox
+
+// Basic if statement
+var x = 10;
+if (x > 5) {
+  print "x is greater than 5";
+}
+
+// If-else statement  
+var y = 3;
+if (y > 5) {
+  print "y is greater than 5";
+} else {
+  print "y is not greater than 5";
+}
+
+// Complex condition with logical operators
+var age = 25;
+var is_student = true;
+
+if (age < 18 or is_student) {
+  print "Young person or student";
+} else {
+  print "Adult non-student";
+}
+
+// Nested if statements
+var score = 85;
+if (score >= 90) {
+  print "Grade: A";
+} else if (score >= 80) {
+  print "Grade: B";
+} else if (score >= 70) {
+  print "Grade: C";
+} else {
+  print "Grade: F";
+}

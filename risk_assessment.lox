@@ -1,0 +1,67 @@
+// Risk Assessment Program
+// Variables: age, is_smoking, has_medical_condition
+
+// Test case 1: Under 18 - Ineligible
+var age = 17;
+var is_smoking = false;
+var has_medical_condition = false;
+
+if (age < 18) {
+  print "Ineligible";
+} else if (age > 60 or (is_smoking and has_medical_condition)) {
+  print "High Risk";
+} else {
+  print "Low Risk";
+}
+
+// Test case 2: Over 60 - High Risk
+age = 65;
+is_smoking = false;
+has_medical_condition = false;
+
+if (age < 18) {
+  print "Ineligible";
+} else if (age > 60 or (is_smoking and has_medical_condition)) {
+  print "High Risk";
+} else {
+  print "Low Risk";
+}
+
+// Test case 3: Smoker with medical condition - High Risk
+age = 45;
+is_smoking = true;
+has_medical_condition = true;
+
+if (age < 18) {
+  print "Ineligible";
+} else if (age > 60 or (is_smoking and has_medical_condition)) {
+  print "High Risk";
+} else {
+  print "Low Risk";
+}
+
+// Test case 4: Smoker without medical condition - Low Risk
+age = 45;
+is_smoking = true;
+has_medical_condition = false;
+
+if (age < 18) {
+  print "Ineligible";
+} else if (age > 60 or (is_smoking and has_medical_condition)) {
+  print "High Risk";
+} else {
+  print "Low Risk";
+}
+
+// Test case 5: Adult with no risk factors - Low Risk
+age = 30;
+is_smoking = false;
+has_medical_condition = false;
+
+if (age < 18) {
+  print "Ineligible";
+} else if (age > 60 or (is_smoking and has_medical_condition)) {
+  print "High Risk";
+} else {
+  print "Low Risk";
+}
