@@ -1,22 +1,25 @@
-// Fibonacci Sequence - First 10 digits using for loop
-// Formula: F(n) = F(n-1) + F(n-2)
+// Calculates the first 10 digits of the Fibonacci sequence using both a for loop and a while loop
 
-print "Fibonacci Sequence - First 10 digits:";
-
-// Handle first two numbers as special cases
+// Using a for loop
+print "Fibonacci sequence (for loop):";
 var a = 0;
 var b = 1;
-
-print a; // F(0) = 0
-print b; // F(1) = 1
-
-// Calculate F(2) through F(9) using for loop
-for (var i = 2; i < 10; i = i + 1) {
-  var next = a + b; // F(n) = F(n-1) + F(n-2)
-  print next;
-  
-  a = b;     // Move F(n-1) to a
-  b = next;   // Move F(n) to b
+for (var i = 0; i < 10; i = i + 1) {
+    print a;
+    var temp = a + b;
+    a = b;
+    b = temp;
 }
 
-print "First 10 Fibonacci numbers calculated!";
+// Using a while loop
+print "Fibonacci sequence (while loop):";
+var x = 0;
+var y = 1;
+var count = 0;
+while (count < 10) {
+    print x;
+    var temp2 = x + y;
+    x = y;
+    y = temp2;
+    count = count + 1;
+}
