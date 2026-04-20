@@ -9,6 +9,8 @@ abstract class Stmt {
     R visitPrintStmt(Print stmt);
     R visitVarStmt(Var stmt);
     R visitIfStmt(If stmt);
+    R visitWhileStmt(While stmt);
+    R visitForStmt(For stmt);
   }
 
   static class Block extends Stmt {
@@ -79,6 +81,42 @@ abstract class Stmt {
     @Override
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitIfStmt(this);
+    }
+  }
+
+  static class While extends Stmt {
+    While(Expr condition, Stmt body) {
+      this.condition = condition;
+      this.body = body;
+    }
+
+    final Expr condition;
+    final Stmt body;
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitWhileStmt(this);
+    }
+  }
+
+  static class For extends Stmt {
+    For(Token name, Stmt initializer, Expr condition, Expr increment, Stmt body) {
+      this.name = name;
+      this.initializer = initializer;
+      this.condition = condition;
+      this.increment = increment;
+      this.body = body;
+    }
+
+    final Token name;
+    final Stmt initializer;
+    final Expr condition;
+    final Expr increment;
+    final Stmt body;
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitForStmt(this);
     }
   }
 

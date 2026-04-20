@@ -1,0 +1,22 @@
+// Fibonacci Sequence - First 10 digits using for loop
+// Formula: F(n) = F(n-1) + F(n-2)
+
+print "Fibonacci Sequence - First 10 digits:";
+
+// Handle first two numbers as special cases
+var a = 0;
+var b = 1;
+
+print a; // F(0) = 0
+print b; // F(1) = 1
+
+// Calculate F(2) through F(9) using for loop
+for (var i = 2; i < 10; i = i + 1) {
+  var next = a + b; // F(n) = F(n-1) + F(n-2)
+  print next;
+  
+  a = b;     // Move F(n-1) to a
+  b = next;   // Move F(n) to b
+}
+
+print "First 10 Fibonacci numbers calculated!";

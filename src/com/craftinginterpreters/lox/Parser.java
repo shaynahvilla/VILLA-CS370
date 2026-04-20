@@ -229,6 +229,8 @@ class Parser {
 		if (match(PRINT)) return printStatement();
 		if (match(LEFT_BRACE)) return new Stmt.Block(block());
 		if (match(IF)) return ifStatement();
+		if (match(WHILE)) return whileStatement();
+		if (match(FOR)) return forStatement();
 		return expressionStatement();
 	}
 
@@ -266,6 +268,45 @@ class Parser {
 		}
 
 		return new Stmt.If(condition, thenBranch, elseBranch);
+	}
+
+	private Stmt whileStatement() {
+		consume(LEFT_PAREN, "Expect '(' after 'while'.");
+		Expr condition = expression();
+		consume(RIGHT_PAREN, "Expect ')' after while condition.");
+		Stmt body = statement();
+		return new Stmt.While(condition, body);
+	}
+
+	private Stmt forStatement() {
+		consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+		Stmt initializer = null;
+		if (match(VAR)) {
+			Token name = consume(IDENTIFIER, "Expect variable name.");
+			consume(EQUAL, "Expect '=' after for variable name.");
+			Expr initializerExpr = expression();
+			initializer = new Stmt.Var(name, initializerExpr);
+		} else if (!match(SEMICOLON)) {
+			initializer = new Stmt.Expression(expression());
+		}
+
+		consume(SEMICOLON, "Expect ';' after for initializer.");
+
+		Expr condition = null;
+		if (!match(SEMICOLON)) {
+			condition = expression();
+		}
+		consume(SEMICOLON, "Expect ';' after for condition.");
+
+		Expr increment = null;
+		if (!match(RIGHT_PAREN)) {
+			increment = expression();
+		}
+		consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+		Stmt body = statement();
+		return new Stmt.For(null, initializer, condition, increment, body);
 	}
 
 	private List<Stmt> block() {
