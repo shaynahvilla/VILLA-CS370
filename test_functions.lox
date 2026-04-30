@@ -1,0 +1,31 @@
+// Test function declarations and calls
+fun add(a, b) {
+    return a + b;
+}
+
+fun greet(name) {
+    print "Hello, " + name + "!";
+}
+
+// Test function calls
+print add(5, 3);
+greet("World");
+
+// Test local functions and closures
+fun makeCounter() {
+    var i = 0;
+    fun count() {
+        i = i + 1;
+        print i;
+    }
+    return count;
+}
+
+var counter = makeCounter();
+counter(); // prints 1
+counter(); // prints 2
+counter(); // prints 3
+
+// Test function as values
+var addAgain = add;
+print addAgain(10, 20);

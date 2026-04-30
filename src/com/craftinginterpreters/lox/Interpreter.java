@@ -1,10 +1,62 @@
 package com.craftinginterpreters.lox;
 
 import java.util.List;
+import java.util.ArrayList;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	private final Environment globals = new Environment();
 	private Environment environment = globals;
+	
+	private static class Return extends RuntimeException {
+		final Object value;
+		
+		Return(Object value) {
+			super(null, null, false, false);
+			this.value = value;
+		}
+	}
+	
+	private static class LoxFunction implements LoxCallable {
+		private final Stmt.Function declaration;
+		private final Environment closure;
+		
+		LoxFunction(Stmt.Function declaration, Environment closure) {
+			this.declaration = declaration;
+			this.closure = closure;
+		}
+		
+		@Override
+		public int arity() {
+			return declaration.params.size();
+		}
+		
+		@Override
+		public Object call(Interpreter interpreter, List<Object> arguments) {
+			Environment environment = new Environment(closure);
+			for (int i = 0; i < declaration.params.size(); i++) {
+				environment.define(declaration.params.get(i).lexeme, arguments.get(i));
+			}
+			
+			try {
+				interpreter.executeBlock(declaration.body, environment);
+			} catch (Return returnValue) {
+				return returnValue.value;
+			}
+			
+			return null;
+		}
+		
+		@Override
+		public String toString() {
+			return "<fn " + declaration.name.lexeme + ">";
+		}
+	}
+	
+	interface LoxCallable {
+		int arity();
+		Object call(Interpreter interpreter, List<Object> arguments);
+	}
+
 	private Object evaluate(Expr expr) {
 		return expr.accept(this);
 	}
@@ -49,6 +101,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	public Object visitLiteralExpr(Expr.Literal expr) {
 		return expr.value;
 	}
+
 	@Override
 	public Object visitGroupingExpr(Expr.Grouping expr) {
 		return evaluate(expr.expression);
@@ -119,7 +172,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 				if (left instanceof String && right instanceof String) {
 					return (String)left + (String)right;
 				}
-				throw new RuntimeError(expr.operator, "RAH");
+				throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
 		}
 
 		return null;
@@ -127,7 +180,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	private void checkNumberOperands(Token operator, Object left, Object right) {
 		if (left instanceof Double && right instanceof Double) return;
-		throw new RuntimeError(operator, "number please");
+		throw new RuntimeError(operator, "Operands must be numbers.");
 	}
 
 	private boolean isEqual(Object a, Object b) {
@@ -233,5 +286,49 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		} finally {
 			this.environment = previous;
 		}
+	}
+
+	@Override
+	public Void visitFunctionStmt(Stmt.Function stmt) {
+		LoxFunction function = new LoxFunction(stmt, environment);
+		environment.define(stmt.name.lexeme, function);
+		return null;
+	}
+
+	@Override
+	public Void visitReturnStmt(Stmt.Return stmt) {
+		Object value = null;
+		if (stmt.value != null) {
+			value = evaluate(stmt.value);
+		}
+		
+		throw new Return(value);
+	}
+
+	@Override
+	public Object visitCallExpr(Expr.Call expr) {
+		Object callee = evaluate(expr.callee);
+		
+		List<Object> arguments = new ArrayList<>();
+		for (Expr argument : expr.arguments) {
+			arguments.add(evaluate(argument));
+		}
+		
+		if (!(callee instanceof LoxCallable)) {
+			throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+		}
+		
+		LoxCallable function = (LoxCallable)callee;
+		
+		if (arguments.size() != function.arity()) {
+			throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+		}
+		
+		return function.call(this, arguments);
+	}
+
+	@Override
+	public Object visitFunctionExpr(Expr.Function expr) {
+		return new LoxFunction(new Stmt.Function(null, expr.params, expr.body), environment);
 	}
 }

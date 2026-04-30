@@ -1,25 +1,28 @@
-# JLox If Statements Implementation - CS370 Assignment
+# JLox Functions Implementation - CS370 Assignment
 
 ## Overview
-This implementation adds if statement support to the JLox interpreter as required for section 9.2. The implementation includes:
+This implementation adds function support to the JLox interpreter as required for section 10.6 (Local Functions and Closures). The implementation includes:
 
-1. **If statement parsing** in `Parser.java`
-2. **If statement execution** in `Interpreter.java` 
-3. **Logical operators** (and, or) support
-4. **Risk assessment program** demonstrating the functionality
+1. **Function declarations** in `Stmt.java` and `Parser.java`
+2. **Function calls** in `Expr.java` and `Parser.java`
+3. **Return statements** in `Stmt.java` and `Parser.java`
+4. **Function expressions** for anonymous functions
+5. **Closures** - functions capture their lexical environment
+6. **Function execution** in `Interpreter.java`
 
 ## Files Modified
 
 ### Core Implementation
-- `Stmt.java` - Added `If` statement class and updated Visitor interface
-- `Expr.java` - Added `Logical` expression class for and/or operators
-- `Parser.java` - Added `ifStatement()`, `or()`, `and()` methods
-- `Interpreter.java` - Added `visitIfStmt()` and `visitLogicalExpr()` methods
-- `AstPrinter.java` - Added `visitLogicalExpr()` method
+- `Stmt.java` - Added `Function` and `Return` statement classes, updated Visitor interface
+- `Expr.java` - Added `Call` and `Function` expression classes, updated Visitor interface
+- `Parser.java` - Added `function()`, `returnStatement()`, `call()`, `finishCall()` methods
+- `Interpreter.java` - Added `LoxFunction` class, `visitFunctionStmt()`, `visitReturnStmt()`, `visitCallExpr()`, `visitFunctionExpr()` methods
+- `AstPrinter.java` - Added `visitCallExpr()` and `visitFunctionExpr()` methods
 
 ### Test Programs
-- `risk_assessment.lox` - Main assignment program
-- `demo.lox` - Simple demonstration of if statements
+- `test_functions.lox` - Demonstrates function declarations, calls, and closures
+- `fibonacci_VILLA.lox` - Fibonacci sequence using functions and loops
+- `risk_assessment.lox` - Original if statement demonstration program
 
 ## Risk Assessment Program Output
 
